@@ -84,7 +84,7 @@
 
 .text
 	main:
-		openFileRead("dados.txt")
+		openFileRead("data.txt")
 		move $s0, $v0
 		jal somaDados
 		printString("SOMA: ")
