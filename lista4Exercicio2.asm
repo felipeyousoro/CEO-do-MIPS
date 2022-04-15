@@ -135,12 +135,17 @@
 	.text
 		main:
 			isColumnPerm(%arrayAddress, %i, %j)
-			printInt($v0)	
-			beqz $v0, end
+			beqz $v0, notPerm
 			isLinePerm(%arrayAddress, %i, %j)
-			printInt($v0)
-			beqz $v0, end		
+			beqz $v0, notPerm	
+			printString("Is permutation")
+			li $v0, 1
+			j end
+		notPerm:
+			printString("Is not permutation")
+			li $v0, 0
 		end:		
+		
 .end_macro
 
 .text
@@ -149,7 +154,7 @@
 		alloc($s1)
 		move $s0, $v0
 		readArray($s0, $s1)
-		printInt($v0)
+		isPermutation($s0, $s1, $s1)
 		end()
 		
 	readN:   ###### 
