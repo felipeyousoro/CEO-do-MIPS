@@ -17,4 +17,4 @@ se a matriz A é de permutação. ***(KINO)***
 
 
 ## Exercício proposto 2:
-Elaborar um programa em MIPS que lê um arquivo `data.txt` e apresente a soma de seus números.
+Elaborar um programa em MIPS que lê um arquivo `data.txt` e apresente a soma de seus números ***(KINO)***.
