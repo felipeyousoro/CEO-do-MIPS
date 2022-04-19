@@ -2,6 +2,7 @@
 
 alguem arruma a merda da arvore binaria pra inserir a vontade
 
+![Takami_Chika_Stressing_On_Assembly](https://user-images.githubusercontent.com/42080804/163895389-1f90c01b-9461-4e85-ab20-d5688006195b.png)
 
 ## Lista 4:
 
@@ -17,11 +18,11 @@ se a matriz A é de permutação. ***(KINO)***
 
 
 ## Exercício proposto 2:
-Elaborar um programa em MIPS que lê um arquivo `data.txt` e apresente a soma de seus números ***(KINO)***.
+Elaborar um programa em MIPS que lê um arquivo `data.txt` e apresenta a soma de seus números ***(KINO)***.
 
 ## Lista 6:
 
 1) Elaborar um programa, em código em MIPS, que faça a leitura de um arquivo de inteiros (crie o arquivo dados1.txt com n elementos inteiros separados por um espaço em branco entre os números) e determine (implementando com funções): a) o maior valor; b) o menor valor; c) o número de elementos ímpares; d) o número de elementos pares; e) a soma dos valores; f) os valores em ordem crescente; g) os valores em ordem decrescente; h) o produto dos elementos e i) o número de caracteres do arquivo. ***(KINO)***
 
-2) Elaborar um programa, em código MIPS, que realize todas as operações do exercício 1), com o arquivo dados2.txt composto por n elementos inteiros, sendo um valor inteiro por linha no arquivo. ***(Esta errado, falta corrigir)***
+2) Elaborar um programa, em código MIPS, que realize todas as operações do exercício 1), com o arquivo dados2.txt composto por n elementos inteiros, sendo um valor inteiro por linha no arquivo. ***(Está errado, falta corrigir)***
 
