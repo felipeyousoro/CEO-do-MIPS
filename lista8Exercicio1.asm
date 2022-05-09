@@ -43,14 +43,43 @@
 		syscall
 .end_macro
 
+.macro readFloatVector(%address, %size)
+	.text
+		main:
+			li $t0 0
+			move $t1 %address
+		loop:
+			readFloat()
+			swc1 $f0 ($t1)
+			add $t0 $t0 1
+			add $t1 $t1 4
+			blt $t0 %size loop	
+		end:
+.end_macro
+
+.macro printFloatVector(%address, %size)
+	.text
+		main:
+			li $t0 0
+			move $t1 %address
+		loop:
+			lwc1 $f0 ($t1)
+			printFloat($f0)
+			add $t0 $t0 1
+			add $t1 $t1 4
+			blt $t0 %size loop	
+		end:
+.end_macro
+
 .text
 	main:
-		#jal readN
-		#sll $v0 $v0 2
-		#alloc($v0)
-		#move $t0 $v0
-		readFloat()
-		printFloat($f0)
+		jal readN
+		move $s1 $v0
+		sll $v0 $v0 2
+		alloc($v0)
+		move $s0 $v0
+		readFloatVector($s0 $s1)
+		printFloatVector($s0 $s1)
 		end()
 	
 	readN:   ###### 
