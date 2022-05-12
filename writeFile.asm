@@ -78,7 +78,7 @@
 
 .text
 	main:
-		openFileWrite("nigga.txt")
+		openFileWrite("ninguemleu.txt")
 		move $s0, $v0
 		writeFile($s0, "bilu teteia")
 		closeFile($s0)
