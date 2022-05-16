@@ -29,6 +29,13 @@
 		syscall
 .end_macro
 
+.macro printInt(%int)
+	.text
+		move $a0, %int
+		li $v0, 1
+		syscall
+.end_macro
+
 .macro printFloat(%float)
 	.text
 		mov.s $f12 %float
@@ -90,7 +97,7 @@
 			lwc1 $f22, 4($t0)
 			c.lt.s $f22, $f20
 			bc1f skip
-			swap:
+				swap:
 				swc1 $f22, ($t0)
 				swc1 $f20, 4($t0)
 				la $t0, currentIndex
@@ -111,17 +118,50 @@
 .text
 	main:
 		jal readN
-		move $s1 $v0
+		move $s1 $v0 #s1 = size
 		sll $v0 $v0 2
 		alloc($v0)
-		move $s0 $v0
+		move $s0 $v0 #s0 = endereco
 		readFloatVector($s0 $s1)
 		sortFloatVector($s0, $s1)
-		printFloatVector($s0 $s1)
+		#printFloatVector($s0 $s1)
+		jal check
 		end()
 	
 	readN:   ###### 
 		printString("Write the value of N: ")
 		readInt()
-		move $s2, $v0
 		jr $ra
+	
+	check:
+		move $t0, $s0
+		li $t1, 0
+		li $t2, 0
+		lwc1 $f20, ($t0)
+		add $t1, $t1, 1
+		loopCheck:
+			add $t2, $t2, 1
+			bge $t2, $s1, endLoopCheck
+			add $t0, $t0, 4
+			lwc1 $f22, ($t0)
+			c.eq.s $f20, $f22
+			bc1f next
+			add $t1, $t1, 1	
+			j loopCheck
+				next:
+			printFloat($f20)	
+			printString(" ")
+			printInt($t1)
+			printString(" vez(es)\n")
+			li $t1, 1
+			mov.s $f20, $f22
+			j loopCheck
+		endLoopCheck:
+			printFloat($f20)	
+			printString(" ")
+			printInt($t1)
+			printString(" vez(es)\n")
+			jr $ra
+		
+		
+		
