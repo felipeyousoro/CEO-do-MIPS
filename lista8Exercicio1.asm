@@ -65,10 +65,47 @@
 		loop:
 			lwc1 $f0 ($t1)
 			printFloat($f0)
+			printString(" ")
 			add $t0 $t0 1
 			add $t1 $t1 4
 			blt $t0 %size loop	
 		end:
+.end_macro
+
+.macro sortFloatVector(%address, %size)
+	.data
+		currentIndex: .space 4
+	.text
+		main:
+			la $t0, currentIndex
+			sw $zero, ($t0)
+			ble %size, 1, end
+		loop:
+			move $t0, %address
+			la $t1, currentIndex
+			lw $t1, ($t1)
+			sll $t1, $t1, 2
+			add $t0, $t0, $t1 #t0 = [t0]
+			lwc1 $f20, ($t0) 
+			lwc1 $f22, 4($t0)
+			c.lt.s $f22, $f20
+			bc1f skip
+			swap:
+				swc1 $f22, ($t0)
+				swc1 $f20, 4($t0)
+				la $t0, currentIndex
+				sw $zero, ($t0) #reset index
+				j loop
+				skip:
+			la $t0, currentIndex
+			move $t1, $t0
+			lw $t0, ($t0)
+			add $t0, $t0, 1 #incremento no index
+			sw $t0, ($t1)
+			add $t0, $t0, 1 #size inicia em 1, enquanto o index em 0, isso serve para compensar
+			blt $t0, %size, loop
+		end:
+
 .end_macro
 
 .text
@@ -79,6 +116,7 @@
 		alloc($v0)
 		move $s0 $v0
 		readFloatVector($s0 $s1)
+		sortFloatVector($s0, $s1)
 		printFloatVector($s0 $s1)
 		end()
 	
