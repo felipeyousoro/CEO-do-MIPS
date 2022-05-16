@@ -1,4 +1,50 @@
-.data 
+#######################################################################################################################################
+			############	############	############
+			##		#		#	   #
+			##		#		#	   #
+			##		############    #	   #
+			##		#		#	   #
+			##		#		#  	   #
+			############    ############	############
+		
+				###########	############
+				#	   #	#	   #
+				#	   #	#	   #
+				#	   #	#	   #
+				#	   #	#	   #
+				#	   #	#	   #
+				###########	############
+
+		    ##		##     #     ##########     ##########
+		    # ##      ## #     #     #        #	    #
+		    #   ##  ##   #     #     #	      #	    #
+		    #	  ##     #     #     ##########     ##########
+		    #		 #     #     #			     #
+		    #		 #     #     #			     #
+		    #		 #     #     #		    ##########
+						
+#####################################################################################################################################
+
+# By: Felipe Yousoro (based chad mito)
+
+# Filosofia: Ultra economia de registradores, usando 
+#	     apenas $t0 e $t1 como registradores temporários
+#	     e $v0, $v1, $a0, $a1 e $a2 como retorno
+
+# faltam:
+# int to string
+# string to int
+# strlen buffer
+# openfileread
+# openfilewrite
+# getchar
+# getchar size
+# writefile
+# writefile buffer
+# read int vector
+# read int array (possivelmente incorporar vector como array)
+# print int array
+# sort int vector
 
 .macro printString(%string)
 	.data
@@ -75,6 +121,41 @@
 			la $t0, size
 			lw $t0, ($t0)
 			move $v0, $t0
+.end_macro
+
+.macro sortFloatVector(%address, %size)
+	.data
+		currentIndex: .space 4
+	.text
+		main:
+			la $t0, currentIndex
+			sw $zero, ($t0)
+			ble %size, 1, end
+		loop:
+			move $t0, %address
+			la $t1, currentIndex
+			lw $t1, ($t1)
+			sll $t1, $t1, 2
+			add $t0, $t0, $t1 #t0 = [t0]
+			lwc1 $f20, ($t0) 
+			lwc1 $f22, 4($t0)
+			c.lt.s $f22, $f20
+			bc1f skip
+				swap:
+				swc1 $f22, ($t0)
+				swc1 $f20, 4($t0)
+				la $t0, currentIndex
+				sw $zero, ($t0) #reset index
+				j loop
+				skip:
+			la $t0, currentIndex
+			move $t1, $t0
+			lw $t0, ($t0)
+			add $t0, $t0, 1 #incremento no index
+			sw $t0, ($t1)
+			add $t0, $t0, 1 #size inicia em 1, enquanto o index em 0, isso serve para compensar
+			blt $t0, %size, loop
+		end:
 .end_macro
 
 .text
