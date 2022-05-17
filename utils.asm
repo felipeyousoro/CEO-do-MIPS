@@ -7,13 +7,13 @@
 			##		#		#  	   #
 			############    ############	############
 		
-				##########	############
-				#	  #	#	   #
+				###########	############
 				#	   #	#	   #
 				#	   #	#	   #
 				#	   #	#	   #
-				#	  #	#	   #
-				##########	############
+				#	   #	#	   #
+				#	   #	#	   #
+				###########	############
 
 		    ##		##     #     ##########     ##########
 		    # ##      ## #     #     #        #	    #
@@ -155,6 +155,141 @@
 			sw $t0, ($t1)
 			add $t0, $t0, 1 #size inicia em 1, enquanto o index em 0, isso serve para compensar
 			blt $t0, %size, loop
+		end:
+.end_macro
+
+.macro pow(%x, %y)
+	.text
+		main:
+			move $v0, %x #isso nao vai contra a filosofia de 2 registradores
+			move $t0, %y
+			bgt $t0, 1, loop
+			bnez $t0, end
+			li $v0, 1
+			j end
+		loop:
+			mul $v0, $v0, %x
+			sub $t0, $t0, 1
+			bgt $t0, 1, loop
+		end:
+.end_macro
+
+.macro memcopy(%addressFrom, %addressTo, %size)
+	.data
+		currentIndex: .word 0
+	.text
+		main:
+			li $t1, 0
+		loop:
+			lw $t0, currentIndex
+			add $t1, $t0, %addressTo
+			add $t0, $t0, %addressFrom
+			lb $t0, ($t0) #conteudo aberto
+			sb $t0, ($t1) #conteudo guardado
+			lw $t0, currentIndex
+			add $t0, $t0, 1
+			sw $t0, currentIndex
+			blt $t0, %size, loop
+		end:
+.end_macro
+
+
+.macro invertStringBuffer(%address, %size)
+	.data
+		firstHalf: .space 1
+		lastHalf: .space 1
+		currentIndex: .word 0
+	.text
+		main:
+			blt %size, 2, end
+		loop:
+			lw $t0, currentIndex
+			add $t0, $t0, %address
+			lb $t0, ($t0)
+			sb $t0, firstHalf #guardado primeiro
+			lw $t1, currentIndex 
+			sub $t1, %address, $t1
+			sub $t1, $t1, 1
+			add $t1, $t1, %size
+			lb $t0, ($t1)
+			sb $t0, lastHalf #guardado segundo
+			lb $t0, firstHalf
+			sb $t0, ($t1) #reescrito primeiro
+			lw $t1, currentIndex
+			add $t1, $t1, %address
+			lb $t0, lastHalf
+			sb $t0, ($t1) #reescrito segundo
+			lw $t0, currentIndex #incremento
+			add $t0, $t0, 1
+			sw $t0, currentIndex
+			sub $t1, %size, $t0
+			blt $t0, $t1, loop
+		end:
+.end_macro
+
+.macro invertIntVector(%address, %size)
+	.data
+		firstHalf: .space 4
+		lastHalf: .space 4
+		currentIndex: .word 0
+	.text
+		main:
+			blt %size, 2, end
+		loop:
+			lw $t0, currentIndex
+			sll $t0, $t0, 2
+			add $t0, $t0, %address
+			lw $t0, ($t0)
+			sw $t0, firstHalf #guardado primeiro
+			lw $t1, currentIndex 
+			sub $t1, %size, $t1
+			sll $t1, $t1, 2
+			add $t1, $t1, %address
+			sub $t1, $t1, 4
+			lw $t0, ($t1)
+			sw $t0, lastHalf #guardado segundo
+			lw $t0, firstHalf
+			sw $t0, ($t1) #reescrito primeiro
+			lw $t1, currentIndex
+			sll $t1, $t1, 2
+			add $t1, $t1, %address
+			lw $t0, lastHalf
+			sw $t0, ($t1) #reescrito segundo
+			lw $t0, currentIndex #incremento
+			add $t0, $t0, 1
+			sw $t0, currentIndex
+			sub $t1, %size, $t0
+			blt $t0, $t1, loop
+		end:
+.end_macro
+
+.macro printFloatVector(%address, %size)
+	.text
+		main:
+			li $t0 0
+			move $t1 %address
+		loop:
+			lwc1 $f0 ($t1)
+			printFloat($f0)
+			printString(" ")
+			add $t0 $t0 1
+			add $t1 $t1 4
+			blt $t0 %size loop	
+		end:
+.end_macro
+
+.macro printIntVector(%address, %size)
+	.text
+		main:
+			li $t0, 0
+			move $t1, %address
+		loop:
+			lw $v0, ($t1) #vai contra a filosofia de 2 registradores, mas to com preguica de mudar
+			printInt($v0)
+			printString(" ")
+			add $t0, $t0 1
+			add $t1, $t1 4
+			blt $t0, %size loop	
 		end:
 .end_macro
 
