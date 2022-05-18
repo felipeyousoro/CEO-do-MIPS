@@ -41,9 +41,7 @@
 # getchar size
 # writefile
 # writefile buffer
-# read int vector
 # read int array (possivelmente incorporar vector como array)
-# print int array
 # sort int vector
 
 .macro printString(%string)
